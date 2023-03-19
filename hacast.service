@@ -1,0 +1,15 @@
+[Unit]
+Description=HA Cast Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/ha-cast/ha-cast.py
+WorkingDirectory=/opt/ha-cast/
+User=hacast_user
+Group=hacast_user
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
