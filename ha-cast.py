@@ -2,7 +2,9 @@ import subprocess
 import time
 import logging
 import logging.handlers
+import yaml
 
+from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
 log_file = "ha-cast.log"
@@ -19,42 +21,33 @@ handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)
 
 logging.basicConfig(level=logging.INFO, handlers=[handler])
 
-#Change the following for your own device(s)
-device_map = {
-    "<DEVICE_1_NAME>": "<DEVICE_1_DASHBOARD>",
-    "<DEVICE_2_NAME>": "<DEVICE_2_DASHBOARD>",
-    "<DEVICE_3_NAME>": "<DEVICE_3_DASHBOARD>",
-}
+with open('config.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+
+device_map = config['device_map']
+
+def check_status(device_name, state):
+    try:
+        status_output = subprocess.check_output(["catt", "-d", device_name, "status"]).decode()
+        if state in status_output:
+            return True
+        return False
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error checking {state} state for {device_name}: {e}")
+        return None
 
 def check_dashboard_state(device_name):
-    try:
-        status_output = subprocess.check_output(["catt", "-d", device_name, "status"]).decode()
-        if "Dummy" in status_output:
-            return True
-        else:
-            return False
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Error checking dashboard state for {device_name}: {e}")
-        return None
+    return check_status(device_name, "Dummy")
 
 def check_media_state(device_name):
-    try:
-        status_output = subprocess.check_output(["catt", "-d", device_name, "status"]).decode()
-        if "PLAYING" in status_output:
-            return True
-        else:
-            return False
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Error checking media state for {device_name}: {e}")
-        return None
+    return check_status(device_name, "PLAYING")
 
 def check_both_states(device_name):
     try:
-        if check_dashboard_state(device_name) or check_media_state(device_name):
-            return True
-        return False
+        return check_dashboard_state(device_name) or check_media_state(device_name)
     except TypeError:
         return None
+
 
 def cast_dashboard(device_name, dashboard_url):
     try:
@@ -67,27 +60,49 @@ def cast_dashboard(device_name, dashboard_url):
         logging.error(f"Error casting dashboard to {device_name}: {e}")
         return None
 
-# loop continuously check the media and dashboard state and cast the dashboard only if necessary
+# Create a loop to continuously check the media and dashboard state and cast the dashboard if necessary
 max_retries = 5
 retry_delay = 30
 retry_count = 0
 
 while True:
-    for device_name, dashboard_url in device_map.items():
-        retry_count = 0
-        while retry_count < max_retries:
-            if check_both_states(device_name) is None:
-                retry_count += 1
-                logging.warning(f"Retrying in {retry_delay} seconds for {retry_count} time(s) due to previous errors")
-                time.sleep(retry_delay)
-                continue
-            elif check_both_states(device_name):
-                logging.info(f"HA Dashboard (or media) is playing on {device_name}...")
+    now = datetime.now().time()
+
+    if datetime.strptime('06:30', '%H:%M').time() <= now <= datetime.strptime('23:59', '%H:%M').time() or datetime.strptime('00:00', '%H:%M').time() <= now < datetime.strptime('02:00', '%H:%M').time():
+        # code for iterating through devices and casting the screen
+        for device_name, dashboard_url in device_map.items():
+            retry_count = 0
+            while retry_count < max_retries:
+                if check_both_states(device_name) is None:
+                    retry_count += 1
+                    logging.warning(f"Retrying in {retry_delay} seconds for {retry_count} time(s) due to previous errors")
+                    time.sleep(retry_delay)
+                    continue
+                elif check_both_states(device_name):
+                    logging.info(f"HA Dashboard (or media) is playing on {device_name}...")
+                else:
+                    logging.info(f"HA Dashboard (or media) is NOT playing on {device_name}!")
+                    cast_dashboard(device_name, dashboard_url)
+                break
             else:
-                logging.info(f"HA Dashboard (or media) is NOT playing on {device_name}!")
-                cast_dashboard(device_name, dashboard_url)
-            break
-        else:
-            logging.error(f"Max retries exceeded for {device_name}. Skipping...")
-            continue
-    time.sleep(20)
+                logging.error(f"Max retries exceeded for {device_name}. Skipping...")
+                continue
+    else:
+        # code for checking for active HA cast sessions
+        logging.info("Local time is outside of allowed range for casting the screen. Checking for any active HA cast sessions...")
+        ha_cast_active = False
+        for device_name, dashboard_url in device_map.items():
+            if check_dashboard_state(device_name):
+                logging.info(f"HA Dashboard is currently being cast on {device_name}. Stopping...")
+                try:
+                    subprocess.call(["catt", "-d", device_name, "stop"])
+                    ha_cast_active = True
+                except subprocess.CalledProcessError as e:
+                    logging.error(f"Error stopping dashboard on {device_name}: {e}")
+                    continue
+            else:
+                logging.info(f"HA Dashboard is NOT currently being cast on {device_name}. Skipping...")
+                continue
+        if not ha_cast_active:
+            logging.info("No active HA cast sessions found. Sleeping for 5 minutes...")
+            time.sleep(300)
