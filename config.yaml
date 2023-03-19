@@ -1,0 +1,7 @@
+device_map:
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  
+# example:
+# "Office display": "http://192.168.12.104:8123/nest-dashboard/default_view?kiosk"
