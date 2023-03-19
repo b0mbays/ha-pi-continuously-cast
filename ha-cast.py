@@ -25,6 +25,7 @@ with open('config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 
 device_map = config['device_map']
+cast_delay = config['cast_delay']
 
 def check_status(device_name, state):
     try:
@@ -48,7 +49,6 @@ def check_both_states(device_name):
     except TypeError:
         return None
 
-
 def cast_dashboard(device_name, dashboard_url):
     try:
         logging.info(f"Casting dashboard to {device_name}")
@@ -68,7 +68,7 @@ retry_count = 0
 while True:
     now = datetime.now().time()
 
-    if datetime.strptime('06:30', '%H:%M').time() <= now <= datetime.strptime('23:59', '%H:%M').time() or datetime.strptime('00:00', '%H:%M').time() <= now < datetime.strptime('02:00', '%H:%M').time():
+    if datetime.strptime('06:30', '%H:%M').time() <= now <= datetime.strptime('23:59', '%H:%M').time() or datetime.strptime('00:00', '%H:%M').time() <= now < datetime.strptime('02:00', '%H:%M').time():        
         # code for iterating through devices and casting the screen
         for device_name, dashboard_url in device_map.items():
             retry_count = 0
@@ -87,6 +87,7 @@ while True:
             else:
                 logging.error(f"Max retries exceeded for {device_name}. Skipping...")
                 continue
+            time.sleep(cast_delay)
     else:
         # code for checking for active HA cast sessions
         logging.info("Local time is outside of allowed range for casting the screen. Checking for any active HA cast sessions...")
@@ -103,6 +104,7 @@ while True:
             else:
                 logging.info(f"HA Dashboard is NOT currently being cast on {device_name}. Skipping...")
                 continue
+            time.sleep(cast_delay)
         if not ha_cast_active:
             logging.info("No active HA cast sessions found. Sleeping for 5 minutes...")
             time.sleep(300)
