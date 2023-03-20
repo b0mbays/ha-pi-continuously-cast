@@ -36,6 +36,9 @@ def check_status(device_name, state):
     except subprocess.CalledProcessError as e:
         logging.error(f"Error checking {state} state for {device_name}: {e}")
         return None
+    except ValueError as e:
+        logging.error(f"Invalid file descriptor for {device_name}: {e}")
+        return None
 
 def check_dashboard_state(device_name):
     return check_status(device_name, "Dummy")
@@ -58,6 +61,9 @@ def cast_dashboard(device_name, dashboard_url):
         subprocess.call(["catt", "-d", device_name, "volume", "50"])
     except subprocess.CalledProcessError as e:
         logging.error(f"Error casting dashboard to {device_name}: {e}")
+        return None
+    except ValueError as e:
+        logging.error(f"Invalid file descriptor for {device_name}: {e}")
         return None
 
 # Create a loop to continuously check the media and dashboard state and cast the dashboard if necessary
