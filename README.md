@@ -1,6 +1,7 @@
 # Home Assistant Cast (HA-Cast)
 
-## Introduction
+Introduction
+============
 
 Home Assistant Cast (_HA-Cast_) will continuously cast your Home Assistant dashboard to your Google Chromecast device; only if there is no media playing (or HA is already being casted) and the local time is between the defined "allowed casting time" to save some power overnight. 
 
@@ -18,8 +19,8 @@ HA-Cast is intended to be ran as a system service on a Linux box. I'm running it
 
 <br/><br/>
 
-## Requirements: 
-
+Requirements: 
+============
 1. **Home Assistant** (with https [external access setup](https://www.makeuseof.com/secure-home-assistant-installation-free-ssl-certificate/?newsletter_popup=1) required for casting)
 2. **Raspberry Pi** (or some other linux box... I'm using a Raspberry Pi Zero)
 3. **Git** installed on your Linux box prior to starting the installation steps.
@@ -27,8 +28,8 @@ HA-Cast is intended to be ran as a system service on a Linux box. I'm running it
 
 <br/><br/>
 
-## Installation
-
+Installation
+============
 1. Clone this repo to: /opt/ha-cast:
 
 ```
@@ -53,23 +54,36 @@ If you try to play Spotify/Youtube the dashboard will be hidden and will only re
 
 <br/><br/>
 
-## Configuration
+Configuration
+============
+
+* Allowed casting times:
+
+The service will by default continuously try to cast to your chromecast devices between 06.30am -> 02.00am. (There will also be a 5 minute pause at 23.59pm). You can change these timings yourself if you like inside the **ha-cast.py** file on line 70.
 
 * Devices:
 
 You can setup your Google Chromecast Compatible devices inside the **config.yaml** under **device_map**. There's an example in there too.
 
-* Allowed casting times:
-
-The service will continuously try to cast to your chromecast devices between 06.30am -> 02.00am. (There will also be a 5 minute pause at 23.59pm). You can change these timings yourself if you like inside the **ha-cast.py** file on line 70.
-
 * Cast Delay:
 
 The default is set to 10 seconds for checking each device, you can change this inside the **config.yaml** under **cast_delay**.
 
+```yaml
+cast_delay: 10
+device_map:
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  "<YOUR_DISPLAY_NAME>": "YOUR_DASHBOARD_URL"
+  # eg: "Office display": "http://192.168.12.104:8123/office-dashboard/default_view?kiosk"
+  # eg: "Kitchen display": "http://192.168.12.104:8123/kitchen-dashboard/default_view?kiosk"
+```
+
+
 <br/><br/>
 
-## Debugging
+Debugging
+============
 
 There is a log file: /opt/hacast/ha-cast.log that you can check for any errors that may occur.
 
