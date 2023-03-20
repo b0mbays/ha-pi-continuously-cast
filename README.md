@@ -25,6 +25,7 @@ Requirements:
 2. **Raspberry Pi** (or some other linux box... I'm using a Raspberry Pi Zero)
 3. **Git** installed on your Linux box prior to starting the installation steps.
 4. **Trusted network setup** for each Chromecast device to avoid logging in. See guide [here](https://blog.fuzzymistborn.com/homeassistant-and-catt-cast-all-the-things/) and follow the 'Trusted Networks' section half way down. You can either do your entire home network, or individual devices. You can find the IP address for each device by going to Settings -> Device Information -> Technical Information on the device.
+5. **ha-catt-fix** setup for your dashboard to keep the display 'awake' and not time out after 10 minutes.
 
 <br/><br/>
 
