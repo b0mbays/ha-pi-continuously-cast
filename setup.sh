@@ -5,7 +5,7 @@ pushd /opt/ha-cast
 echo "Installing pip3.."
 apt-get -y install python3 python3-pip
 
-echo "***Installing requirements..."
+echo "Installing requirements..."
 pip3 install -r /opt/ha-cast/requirements.txt
 
 echo "Creating a new user for the service.."
