@@ -8,9 +8,9 @@ I'm using this myself for 3 different chromecast devices: Lenovo Smart Display 8
 
 ## How does it work?
 
-The project uses [CATT](https://github.com/skorokithakis/catt) (cast all the things) to cast the dashboard to your Chromecast compatible device. Home Assistant does offer an in-built casting option but I found this to be unreliable for me and I couldn't get it working properly without paying for a Nabu Casu subscription... Instead, I wanted to host HA externally myself for free. (well, $1 p/year). The guide I used it [here](https://www.makeuseof.com/secure-home-assistant-installation-free-ssl-certificate/?newsletter_popup=1) and I bought a domain for $1 from [here](https://gen.xyz/).
+The project uses [CATT](https://github.com/skorokithakis/catt) (cast all the things) to cast the dashboard to your Chromecast compatible device. Home Assistant does offer an in-built casting option but I found this to be unreliable for me and I couldn't get it working properly without paying for a Nabu Casu subscription... Instead, I wanted to host HA externally myself for free. (well, $1 p/year). The guide I used is [here](https://www.makeuseof.com/secure-home-assistant-installation-free-ssl-certificate/?newsletter_popup=1) and I bought a domain for $1 from [here](https://gen.xyz/).
 
-HA-Cast is intended to be ran as a system service on a Linux box. I'm running it on a Raspberry Pi Zero, but any Linux box should do. 
+HA-Cast is intended to be ran as a system service on a Linux box. I'm running it on a Raspberry Pi Zero, but any Linux box should do. This service will then iterate over your devices defined inside the config.yaml file every 10 seconds checking the 'status' of each device. We check the status using [CATT](https://github.com/skorokithakis/catt) and will only cast the dashboard if no media is playing or the dashboard is already being casted. This means that any spotify/youtube sessions won't be interupted, and when you end the "playing" session with "Hey Google, Stop" the dashboard will return.
 
 ## Requirements: 
 
@@ -66,3 +66,28 @@ There is a log file: /opt/hacast/ha-cast.log that you can check for any errors t
 ```
 cat /opt/ha-cast/ha-cast.log
 ```
+
+Check the system status of the service with:
+
+```
+sudo systemctl status hacast
+```
+
+Restart the service:
+
+```
+sudo systemctl restart hacast
+```
+
+Disable the service on boot:
+
+```
+sudo systemctl disable hacast
+```
+
+Enable the service on boot:
+```
+sudo systemctl enable hacast
+```
+
+
