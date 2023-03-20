@@ -44,6 +44,20 @@ Your devices should now start displaying your HA Dashboards!
 
 If you try to play Spotify/Youtube the dashboard will vanish. This will then return after you do a "Hey google, stop" (This may take up to 30 seconds or so depending how many devices you have)
 
+## Configuration
+
+* Devices:
+
+You can setup your Google Chromecast Compatible devices inside the **config.yaml** under **device_map**. There's an example in there too.
+
+* Allowed casting times:
+
+The service will continuously try to cast to your chromecast devices between 06.30am -> 02.00am. (There will also be a 5 minute pause at 23.59pm). You can change these timings yourself if you like inside the **ha-cast.py** file on line 70.
+
+* Cast Delay:
+
+The default is set to 10 seconds for checking each device, you can change this inside the **config.yaml** under **cast_delay**.
+
 
 ## Debugging
 
