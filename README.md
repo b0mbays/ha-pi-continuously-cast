@@ -1,6 +1,6 @@
 # Home Assistant Cast (HA-Cast)
 
-Introduction
+Introduction:
 ============
 
 Home Assistant Cast (_HA-Cast_) will continuously cast your Home Assistant dashboard to your Google Chromecast device; only if there is no media playing (or HA is already being casted) and the local time is between the defined "allowed casting time" to save some power overnight. 
@@ -28,7 +28,7 @@ Requirements:
 
 <br/><br/>
 
-Installation
+Installation:
 ============
 1. Clone this repo to: /opt/ha-cast:
 
@@ -54,7 +54,7 @@ If you try to play Spotify/Youtube the dashboard will be hidden and will only re
 
 <br/><br/>
 
-Configuration
+Configuration:
 ============
 
 * Allowed casting times:
@@ -82,7 +82,7 @@ device_map:
 
 <br/><br/>
 
-Debugging
+Debugging:
 ============
 
 There is a log file: /opt/hacast/ha-cast.log that you can check for any errors that may occur.
