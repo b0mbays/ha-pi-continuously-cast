@@ -67,9 +67,7 @@ retry_count = 0
 
 while True:
     now = datetime.now().time()
-
     if datetime.strptime('06:30', '%H:%M').time() <= now <= datetime.strptime('23:59', '%H:%M').time() or datetime.strptime('00:00', '%H:%M').time() <= now < datetime.strptime('02:00', '%H:%M').time():        
-        # code for iterating through devices and casting the screen
         for device_name, dashboard_url in device_map.items():
             retry_count = 0
             while retry_count < max_retries:
@@ -89,7 +87,6 @@ while True:
                 continue
             time.sleep(cast_delay)
     else:
-        # code for checking for active HA cast sessions
         logging.info("Local time is outside of allowed range for casting the screen. Checking for any active HA cast sessions...")
         ha_cast_active = False
         for device_name, dashboard_url in device_map.items():
