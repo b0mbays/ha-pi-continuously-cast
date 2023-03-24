@@ -1,11 +1,11 @@
-# Home Assistant - Pi Continuously Cast (HA-Pi-Continuously-Cast)
+# Home Assistant - Pi Continuously Cast
 
 Introduction:
 ============
 
 **If you would prefer this functionality as an integration that runs on your HA instance, find this [here](https://github.com/b0mbays/ha-continuous-casting-dashboard), The guide below requires an external Linux box.**
 
-Home Assistant Cast (_HA-Cast_) will continuously cast your Home Assistant dashboard to your Google Chromecast device; only if there is no media playing (or HA is already being casted) and the local time is between the defined "allowed casting time" to save some power overnight. 
+Home Assistant Cast (_HA-Pi-Cast_) will continuously cast your Home Assistant dashboard to your Google Chromecast device; only if there is no media playing (or HA is already being casted) and the local time is between the defined "allowed casting time" to save some power overnight. 
 
 I'm using this myself for 3 different chromecast devices: Lenovo Smart Display 8 & two 1st Gen Google Nest Hubs.
 <p align="center">
